@@ -36,11 +36,18 @@ def get_right_name_format(contacts_list):
 
 
 def duplicates(contacts_list):
-    doubled = contacts_list.copy()
-    for i in range(len(contacts_list) - 1):
-        for j in range(i + 1, len(contacts_list)):
-            if contacts_list[i][0] == contacts_list[j][0] or contacts_list[i][1] == contacts_list[j][1]:
-                doubled.remove(contacts_list[j])
+    double_name_dict = {}
+    for row in contacts_list:
+        if not double_name_dict.get(row[0] + row[1]):
+            double_name_dict[row[0] + row[1]] = [row]
+        else:
+            double_name_dict[row[0] + row[1]].append(row)
+    contacts_list.clear()
+    for key, value in double_name_dict.items():
+        while len(value) != 1:
+            value.append([x or y for x, y in zip(value.pop(0), value.pop(0))])
+        contacts_list.append(*value)
+    contacts_list.sort()
 
 
 def write_correct_file(contacts_list):
